@@ -1,0 +1,73 @@
+{
+  "description": "Cas communs à la règle du pseudo, lus par AccountIdentifierTest (Java, qui compare accepted et stored) et schemas.test.ts (TypeScript, qui compare accepted). stored est le pseudo enregistré, absent quand il est refusé.",
+  "cases": [
+    { "name": "2 caractères", "input": "ab", "accepted": true, "stored": "ab" },
+    {
+      "name": "32 caractères",
+      "input": "abcdefghijklmnopqrstuvwxyz012345",
+      "accepted": true,
+      "stored": "abcdefghijklmnopqrstuvwxyz012345"
+    },
+    { "name": "1 caractère", "input": "a", "accepted": false },
+    {
+      "name": "33 caractères",
+      "input": "abcdefghijklmnopqrstuvwxyz0123456",
+      "accepted": false
+    },
+    { "name": "vide", "input": "", "accepted": false },
+    { "name": "seulement des espaces", "input": "   ", "accepted": false },
+    {
+      "name": "majuscules mises en minuscules",
+      "input": "Camille",
+      "accepted": true,
+      "stored": "camille"
+    },
+    {
+      "name": "I majuscule en i, quelle que soit la langue du serveur",
+      "input": "DIJON",
+      "accepted": true,
+      "stored": "dijon"
+    },
+    {
+      "name": "espaces autour retirés",
+      "input": "  jeune_21  ",
+      "accepted": true,
+      "stored": "jeune_21"
+    },
+    {
+      "name": "point et tiret bas",
+      "input": "_jeune.dijon_",
+      "accepted": true,
+      "stored": "_jeune.dijon_"
+    },
+    {
+      "name": "point en tête et en fin",
+      "input": ".jeune.",
+      "accepted": true,
+      "stored": ".jeune."
+    },
+    {
+      "name": "deux points de suite",
+      "input": "jeune..dijon",
+      "accepted": false
+    },
+    { "name": "tiret", "input": "jeune-dijon", "accepted": false },
+    { "name": "espace interne", "input": "jeune dijon", "accepted": false },
+    { "name": "lettre accentuée", "input": "léa", "accepted": false },
+    { "name": "accent combinant", "input": "léa", "accepted": false },
+    { "name": "a cyrillique", "input": "cаmille", "accepted": false },
+    {
+      "name": "signe kelvin, mis en minuscules en k",
+      "input": "Kevin",
+      "accepted": false
+    },
+    { "name": "lettre pleine chasse", "input": "Ａlice", "accepted": false },
+    {
+      "name": "adresse email",
+      "input": "jeune@example.invalid",
+      "accepted": false
+    },
+    { "name": "emoji", "input": "jeune😀", "accepted": false },
+    { "name": "caractère de contrôle", "input": "a\u0000b", "accepted": false }
+  ]
+}

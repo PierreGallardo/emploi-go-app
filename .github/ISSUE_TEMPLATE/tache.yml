@@ -1,0 +1,43 @@
+name: Tâche
+description: Proposer une fonctionnalité, une amélioration ou un travail technique.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Vérifiez qu'aucune issue existante ne couvre déjà ce travail. Décrivez un objectif précis. N'incluez pas de secrets ou de données personnelles.
+        Donnez un titre qui résume le résultat souhaité, par exemple : « Permettre la recherche d'entreprises par nom ».
+  - type: textarea
+    id: objectif
+    attributes:
+      label: Objectif
+      description: Quel résultat souhaitez-vous obtenir, pour qui et dans quel but ?
+    validations:
+      required: true
+  - type: textarea
+    id: contexte
+    attributes:
+      label: Contexte et limites
+      description: Pourquoi réaliser cette tâche ? Décrivez la situation actuelle et ce que le travail inclut ou exclut.
+    validations:
+      required: true
+  - type: textarea
+    id: criteres
+    attributes:
+      label: Critères d'acceptation
+      description: Décrivez les résultats observables qui permettront de considérer la tâche terminée. Chaque critère doit pouvoir être vérifié sans ambiguïté. Incluez les cas d'erreur importants et la documentation à mettre à jour, si nécessaire.
+      placeholder: |
+        Exemple pour une recherche d'entreprises, à adapter à votre tâche :
+        - [ ] La recherche par nom affiche uniquement les entreprises dont le nom contient le texte saisi.
+        - [ ] Lorsqu'aucune entreprise ne correspond, un message indique qu'aucun résultat n'a été trouvé.
+    validations:
+      required: true
+  - type: textarea
+    id: dependances
+    attributes:
+      label: Travaux ou décisions nécessaires (facultatif)
+      description: Cette tâche nécessite-t-elle un autre travail ou une décision préalable ? Ajoutez les liens utiles et expliquez ce qui bloque.
+  - type: textarea
+    id: references
+    attributes:
+      label: Références (facultatif)
+      description: Ajoutez les guides, discussions ou exemples utiles pour comprendre la tâche.

@@ -1,0 +1,22 @@
+# Only what the image build reads: everything else, secrets and builds included, stays out of the context.
+*
+!package.json
+!package-lock.json
+!.npmrc
+!frontend/
+frontend/build/
+frontend/coverage/
+frontend/e2e/
+frontend/playwright-report/
+frontend/test-results/
+**/target*/
+**/node_modules/
+**/.git/
+**/.env
+**/.env.*
+**/*.key
+**/*.pem
+**/*.p12
+**/*.pfx
+**/*.jks
+**/*.keystore

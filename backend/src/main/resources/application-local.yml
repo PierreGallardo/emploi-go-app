@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/emploigo}
+    username: ${DB_USERNAME:emploigo}
+    password: ${DB_PASSWORD:local-development-only}
+server:
+  address: 127.0.0.1
+---
+spring:
+  config:
+    activate:
+      on-profile: '!worker'
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      password: ${REDIS_PASSWORD:local-development-only}
+emploi-go:
+  auth:
+    quota-key: ${QUOTA_KEY:bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1xdW90YS1rZXk=}
+server:
+  servlet:
+    session:
+      cookie:
+        # HTTP: no `Secure`, so no `__Host-` prefix either.
+        name: EMPLOIGO_SESSION
+        secure: false
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

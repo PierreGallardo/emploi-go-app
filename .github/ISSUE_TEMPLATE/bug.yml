@@ -1,0 +1,50 @@
+name: Bug
+description: Signaler un comportement incorrect et fournir les éléments pour le reproduire.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Vérifiez qu'aucune issue existante ne signale déjà ce bug. Utilisez des données fictives et retirez les secrets ou données personnelles des captures et logs.
+        Donnez un titre qui résume le problème et la condition où il apparaît, par exemple : « La recherche conserve les résultats après suppression du filtre ».
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Étapes pour reproduire
+      description: Comment faire apparaître le bug ? Indiquez les actions et les conditions nécessaires. Si vous ne savez pas le reproduire, décrivez les circonstances observées.
+      placeholder: |
+        1. Ouvrir la page concernée
+        2. Effectuer l'action concernée
+        3. Constater le problème
+    validations:
+      required: true
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Résultat attendu
+      description: Que devrait-il se passer ? Ajoutez une référence utile si nécessaire.
+    validations:
+      required: true
+  - type: textarea
+    id: observe
+    attributes:
+      label: Résultat observé
+      description: Que se passe-t-il réellement ? Indiquez le message d'erreur exact s'il y en a un.
+    validations:
+      required: true
+  - type: textarea
+    id: environnement
+    attributes:
+      label: Environnement et version
+      description: Où le bug apparaît-il (poste local, recette, production ou CI) ? Indiquez la version de l'application ou le commit si connu, puis, si pertinent, le système d'exploitation et le navigateur avec sa version. Pour un problème d'interface, précisez l'appareil ou les dimensions de la fenêtre en pixels.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact et fréquence (facultatif)
+      description: Qui est concerné ? Quelle action est bloquée ou dégradée ? Le problème arrive-t-il toujours ou seulement parfois ? Existe-t-il un moyen de le contourner ?
+  - type: textarea
+    id: complements
+    attributes:
+      label: Informations complémentaires (facultatif)
+      description: Ajoutez des captures, des extraits de logs ou des liens utiles, sans secrets ni données personnelles.

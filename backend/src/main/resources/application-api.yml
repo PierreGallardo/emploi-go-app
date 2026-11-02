@@ -1,0 +1,127 @@
+# Imported automatically when the worker profile is absent.
+spring:
+  application:
+    name: emploi-go-api
+  session:
+    timeout: ${SESSION_TIMEOUT:30m}
+    jdbc:
+      initialize-schema: never
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      # A counter that waits for Redis holds a request thread: a Redis that does not answer must not hold it long.
+      connect-timeout: 500ms
+      timeout: 500ms
+server:
+  forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:NONE}
+  tomcat:
+    remoteip:
+      internal-proxies: ${TRUSTED_PROXY_PATTERN:127\.0\.0\.1|::1}
+      remote-ip-header: X-Forwarded-For
+      protocol-header: X-Forwarded-Proto
+  port: ${SERVER_PORT:8080}
+  servlet:
+    session:
+      cookie:
+        name: __Host-EMPLOIGO_SESSION
+        http-only: true
+        secure: true
+        same-site: lax
+        path: /
+emploi-go:
+  establishment-images:
+    # The folder of the photos of the establishments, kept with the backups.
+    directory: ${ESTABLISHMENT_IMAGES_DIRECTORY:/var/lib/emploi-go/establishment-images}
+  auth:
+    development-account: ${DEV_AUTH_ACCOUNT:false}
+    # Keys the counters of the quotas in Redis; empty by default: the API refuses to start without it.
+    quota-key: ${QUOTA_KEY:}
+    quota:
+      # Limits of each action, counted in attempts within the window: address-limit per client network (an IPv4 address,
+      # or the /60 prefix of an IPv6 one), identity-limit per identity. The sending actions also have a prefix-limit per
+      # /48 IPv6 prefix.
+      # Every value is required, and a missing or out-of-bounds value refuses the start. A duration without a unit is in
+      # seconds. An environment variable overrides a value (dashes become underscores, e.g.
+      # EMPLOI_GO_AUTH_QUOTA_SCOPES_REGISTRATION_MAIL_IDENTITY_LIMIT).
+      scopes:
+        login:
+          # Counts the attempts of an address, and the failures of an identity, answered with a growing delay up to
+          # max-delay instead of a limit. Failures are forgotten counter-ttl after the last one, or at once on success;
+          # counter-ttl must exceed max-delay.
+          address-limit: 90
+          window: 15m
+          failure-delay:
+            free-failures: 5
+            base-delay: 5s
+            growth-factor: 2
+            max-delay: 5m
+            counter-ttl: 30m
+        registration-mail:
+          address-limit: 40
+          identity-limit: 3
+          window: 15m
+          send-delay: 60s
+          global-alert-threshold: 300
+          prefix-limit: 120
+        confirmation:
+          address-limit: 60
+          identity-limit: 30
+          window: 15m
+        recovery-mail:
+          address-limit: 20
+          identity-limit: 3
+          window: 15m
+          send-delay: 60s
+          global-alert-threshold: 300
+          prefix-limit: 120
+        recovery-confirm:
+          address-limit: 30
+          identity-limit: 30
+          window: 15m
+        google-start:
+          address-limit: 30
+          identity-limit: 10
+          window: 15m
+        google-callback:
+          address-limit: 30
+          identity-limit: 10
+          window: 15m
+        google-complete:
+          address-limit: 30
+          identity-limit: 10
+          window: 15m
+        google-link:
+          address-limit: 30
+          identity-limit: 10
+          window: 15m
+        google-mail:
+          address-limit: 10
+          identity-limit: 3
+          window: 15m
+          send-delay: 60s
+          global-alert-threshold: 300
+          prefix-limit: 120
+        google-email-confirm:
+          address-limit: 30
+          identity-limit: 10
+          window: 15m
+        resume:
+          # Counts the resumes per identity, and only for a right secret: not per address, since the young people of one
+          # room share theirs.
+          identity-limit: 10
+          window: 15m
+logging:
+  level:
+    # At DEBUG, they write the identifier typed at login, often an email: a wider debug level leaves them out.
+    org.springframework.security.authentication.ProviderManager: INFO
+    org.springframework.security.authentication.dao.DaoAuthenticationProvider: INFO
+management:
+  server:
+    port: ${MANAGEMENT_PORT:8081}
+  health:
+    redis:
+      enabled: false
+db-scheduler:
+  enabled: false

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Entry point",
+    "path": "build/client/assets/entry.client-*.js",
+    "gzip": true,
+    "limit": "72 kB"
+  },
+  {
+    "name": "Map engine",
+    "path": "build/client/assets/map-engine-*.js",
+    "gzip": true,
+    "limit": "315 kB"
+  },
+  {
+    "name": "Map worker",
+    "path": "build/client/assets/maplibre-gl-worker-*.js",
+    "gzip": true,
+    "limit": "160 kB"
+  },
+  {
+    "name": "All JavaScript and CSS",
+    "path": "build/client/assets/*.{js,css}",
+    "gzip": true,
+    "limit": "805 kB"
+  }
+]

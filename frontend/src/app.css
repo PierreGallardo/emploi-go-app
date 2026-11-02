@@ -1,0 +1,272 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* data-theme holds an explicit choice; without one, the system preference decides. */
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:not(:where([data-theme='light'], [data-theme='light'] *)) {
+      @slot;
+    }
+  }
+}
+
+:root {
+  color-scheme: light;
+  --background: oklch(0.9911 0 0);
+  --foreground: oklch(0.1994 0.047 270.6494);
+  --card: oklch(0.9851 0 0);
+  --card-foreground: oklch(0.1994 0.047 270.6494);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.1994 0.047 270.6494);
+  --primary: oklch(0.5702 0.2337 264.3664);
+  --primary-foreground: oklch(1 0 0);
+  /* An opacity would bring the text under a contrast of 4.5 on hover. */
+  --primary-hover: oklch(0.52 0.2337 264.3664);
+  --secondary: oklch(0.1994 0.047 270.6494);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.965 0.006 270);
+  --muted-foreground: oklch(0.46 0.03 270);
+  --accent: oklch(0.96 0.018 264);
+  --accent-foreground: oklch(0.5 0.22 264.3664);
+  --destructive: oklch(0.53 0.1824 39.576);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9212 0.0033 17.217);
+  --input: oklch(0.64 0 0);
+  --ring: oklch(0.5784 0.2303 263.8862);
+  --logo-magenta: oklch(0.4958 0.2005 1.1124);
+  --chart-1: oklch(0.5729 0.2337 264.3664);
+  --chart-2: oklch(0.7677 0.1312 194.1427);
+  --chart-3: oklch(0.9649 0.1962 111.4216);
+  --chart-4: oklch(0.8439 0.1679 169.5646);
+  --chart-5: oklch(0.6411 0.2446 28.5713);
+  --sidebar: oklch(0.9851 0 0);
+  --sidebar-foreground: oklch(0.1994 0.047 270.6494);
+  --sidebar-primary: oklch(0.5729 0.2337 264.3664);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(1 0 0);
+  --sidebar-accent-foreground: oklch(0.5729 0.2337 264.3664);
+  --sidebar-border: oklch(1 0 0);
+  --sidebar-ring: oklch(0.5784 0.2303 263.8862);
+  --font-sans: system-ui, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 1.3rem;
+  --shadow-x: -50px;
+  --shadow-y: 2px;
+  --shadow-blur: 0px;
+  --shadow-spread: -50px;
+  --shadow-opacity: 0;
+  --shadow-color: #2e6aff;
+  --shadow-2xs: -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0);
+  --shadow-xs: -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0);
+  --shadow-sm:
+    -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0),
+    -50px 1px 2px -51px hsl(222.7751 100% 59.0196% / 0);
+  --shadow:
+    -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0),
+    -50px 1px 2px -51px hsl(222.7751 100% 59.0196% / 0);
+  --shadow-md:
+    -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0),
+    -50px 2px 4px -51px hsl(222.7751 100% 59.0196% / 0);
+  --shadow-lg:
+    -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0),
+    -50px 4px 6px -51px hsl(222.7751 100% 59.0196% / 0);
+  --shadow-xl:
+    -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0),
+    -50px 8px 10px -51px hsl(222.7751 100% 59.0196% / 0);
+  --shadow-2xl: -50px 2px 0px -50px hsl(222.7751 100% 59.0196% / 0);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+:root {
+  @variant dark {
+    color-scheme: dark;
+    --background: oklch(0.17 0.035 270.65);
+    --foreground: oklch(0.97 0.008 270.65);
+    --card: oklch(0.205 0.042 270.65);
+    --card-foreground: oklch(0.97 0.008 270.65);
+    --popover: oklch(0.225 0.045 270.65);
+    --popover-foreground: oklch(0.97 0.008 270.65);
+    --primary: oklch(0.66 0.18 264.3664);
+    --primary-foreground: oklch(0.1994 0.047 270.6494);
+    --primary-hover: oklch(0.72 0.14 264.3664);
+    --secondary: oklch(0.97 0.008 270.65);
+    --secondary-foreground: oklch(0.1994 0.047 270.6494);
+    --muted: oklch(0.24 0.045 270.65);
+    --muted-foreground: oklch(0.8 0.03 270.65);
+    --accent: oklch(0.27 0.07 264.3664);
+    --accent-foreground: oklch(0.8 0.1 264.3664);
+    --destructive: oklch(0.74 0.15 39.576);
+    --destructive-foreground: oklch(0.1994 0.047 270.6494);
+    --border: oklch(0.32 0.045 270.65);
+    --input: oklch(0.6 0.05 270.65);
+    --ring: oklch(0.66 0.18 264.3664);
+    --logo-magenta: oklch(0.62 0.2 1.1124);
+    --sidebar: oklch(0.205 0.042 270.65);
+    --sidebar-foreground: oklch(0.97 0.008 270.65);
+    --sidebar-primary: oklch(0.66 0.18 264.3664);
+    --sidebar-primary-foreground: oklch(0.1994 0.047 270.6494);
+    --sidebar-accent: oklch(0.27 0.07 264.3664);
+    --sidebar-accent-foreground: oklch(0.8 0.1 264.3664);
+    --sidebar-border: oklch(0.32 0.045 270.65);
+    --sidebar-ring: oklch(0.66 0.18 264.3664);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-logo-magenta: var(--logo-magenta);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: system-ui, sans-serif;
+  --font-mono: Menlo, monospace;
+  --font-serif: Georgia, serif;
+
+  --radius-sm: calc(var(--radius-item) - 4px);
+  --radius-md: var(--radius-item);
+  --radius-lg: var(--radius-surface);
+  --radius-xl: calc(var(--radius-surface) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+  --shadow-elevated: var(--elevation);
+}
+
+/* The floating surfaces of the map (panel, sheet, dialogs, popups) and the rows inside them. */
+@theme {
+  --radius-surface: 1rem;
+  --radius-item: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* Tailwind v4 gives buttons the default cursor. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  input[type='checkbox']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/*
+ * The side margin of the map page: the header (full-bleed mode), the map controls and the results panel
+ * all stand this far from the edges of the window, so the logo, the controls and the account button line up.
+ */
+:root {
+  --map-inset: 0.75rem;
+  /* The one shadow of what floats over the map: panel, sheet, tooltip, controls. */
+  --elevation: 0 2px 12px rgb(0 0 0 / 0.14);
+  @variant dark {
+    --elevation: 0 2px 12px rgb(0 0 0 / 0.5);
+  }
+}
+
+/* The colour of a sector (`--sector`) as an icon or a text: as given on a light background, lighter
+ * on a dark one, so that it keeps 3:1. */
+.sector-ink {
+  color: var(--sector);
+  @variant dark {
+    color: color-mix(in oklab, var(--sector) 60%, white);
+  }
+}
+
+/* The controls of MapLibre take the look of the app's buttons, in both themes. Its stylesheet loads with the
+ * map, after this one: each rule here is one class more specific than the rule it replaces. */
+.map-host .maplibregl-ctrl-top-left .maplibregl-ctrl {
+  margin: var(--map-inset) 0 0 var(--map-inset);
+}
+.map-host .maplibregl-ctrl-group:not(:empty) {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-item);
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: var(--elevation);
+}
+.map-host .maplibregl-ctrl-group button {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  transition: background-color 150ms;
+}
+.map-host .maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--border);
+}
+.map-host .maplibregl-ctrl-group button:not(:disabled):hover {
+  background-color: var(--accent);
+}
+.map-host .maplibregl-ctrl-group button:focus:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--ring);
+}
+/* The icons of MapLibre are dark pictures: the dark theme turns them light. */
+.map-host .maplibregl-ctrl-icon {
+  @variant dark {
+    filter: invert(1) brightness(1.1);
+  }
+}
+.map-host .maplibregl-ctrl.maplibregl-ctrl-attrib {
+  border-top-right-radius: var(--radius-item);
+  padding: 0.125rem 0.5rem;
+  background: color-mix(in oklab, var(--card) 85%, transparent);
+  color: var(--muted-foreground);
+}
+.map-host .maplibregl-ctrl-attrib.maplibregl-ctrl a {
+  color: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-host .maplibregl-ctrl-group button {
+    transition: none;
+  }
+}
+
+/* The map controls and credits sit above a bottom sheet, which the page measures. */
+.map-host .maplibregl-ctrl-bottom-left {
+  bottom: var(--map-bottom-inset, 0px);
+}

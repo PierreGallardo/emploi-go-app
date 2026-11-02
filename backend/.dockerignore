@@ -1,0 +1,17 @@
+# Only what the image build reads: everything else, secrets and builds included, stays out of the context.
+*
+!mvnw
+!pom.xml
+!.mvn/wrapper/maven-wrapper.properties
+!src/main/
+**/target*/
+**/node_modules/
+**/.git/
+**/.env
+**/.env.*
+**/*.key
+**/*.pem
+**/*.p12
+**/*.pfx
+**/*.jks
+**/*.keystore

@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: emploi-go-worker
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.session.autoconfigure.SessionAutoConfiguration
+      - org.springframework.boot.session.jdbc.autoconfigure.JdbcSessionAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisReactiveAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration
+server:
+  port: ${SERVER_PORT:8090}
+management:
+  server:
+    port: ${MANAGEMENT_PORT:8091}
+db-scheduler:
+  enabled: true
+  threads: 2
+  polling-interval: 10s
+  shutdown-max-wait: 30s
+  delay-startup-until-context-ready: true
+  always-persist-timestamp-in-utc: true
+emploi-go:
+  purge:
+    # Delay from the end of a run to the next (1 minute to 1 hour): email addresses are erased within it, after the 24 hours
+    # announced in the documentation.
+    interval: 5m
+  establishment-synchronization:
+    # Hour of Paris of the daily import of the establishments from the Sirene directory of the INSEE, which advises
+    # paginated reads after 10:00 (its daily update).
+    daily-at: '11:00'
+    directory-url: https://api.insee.fr/api-sirene/3.11
+    # Key of the API Sirene (portail-api.insee.fr). Empty: the worker starts and the import fails.
+    api-key: ${SIRENE_API_KEY:}
+    connect-timeout: 5s
+    response-timeout: 30s
+  dataset-synchronization:
+    connect-timeout: 5s
+    # A whole file: about 7 MB for the Divia feed, 15 MB for the addresses of the Côte-d'Or, 36 MB for the training
+    # organisations.
+    download-timeout: 2m
+    transit-stops:
+      # Hour of Paris of the daily import of the Divia stops (GTFS of DiviaMobilités, Licence Ouverte 2.0).
+      daily-at: '04:00'
+      url: https://www.data.gouv.fr/api/1/datasets/r/e0dbd217-15cd-4e28-9459-211a27511a34
+    addresses:
+      # Hour of Paris of the daily import of the addresses (Base Adresse Nationale, Licence Ouverte 2.0).
+      daily-at: '04:10'
+      url: https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-21.csv.gz
+    training-organizations:
+      # Hour of Paris of the daily import of the training organisations (public list of the Ministry of Labour, Licence
+      # Ouverte 2.0), before the import of the establishments that reads it.
+      daily-at: '04:20'
+      url: https://www.data.gouv.fr/api/1/datasets/r/ac59a0f5-fa83-4b82-bf12-3c5806d4f19f
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

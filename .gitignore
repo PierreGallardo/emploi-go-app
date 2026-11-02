@@ -1,0 +1,50 @@
+# Dépendances et résultats du frontend
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.vitest/
+.react-router/
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+# Compilation Java / Maven
+target/
+target-dev/
+target-isolated/
+*.class
+.tools/
+
+# Configuration locale et secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Journaux et fichiers temporaires
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Configuration personnelle des IDE
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Fichiers générés par le système
+.DS_Store
+Thumbs.db
+Desktop.ini

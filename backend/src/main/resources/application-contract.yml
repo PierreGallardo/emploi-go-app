@@ -1,0 +1,9 @@
+# Isolated API export uses its own PostgreSQL/Redis and explicit ports.
+server:
+  address: 127.0.0.1
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: false
+  writer-with-order-by-keys: true

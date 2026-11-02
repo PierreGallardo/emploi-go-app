@@ -1,0 +1,12 @@
+node_modules/
+backend/target/
+backend/target-dev/
+backend/target-isolated/
+.tools/
+frontend/build/
+frontend/.react-router/
+frontend/src/api/schema.d.ts
+package-lock.json
+playwright-report/
+test-results/
+.claude/

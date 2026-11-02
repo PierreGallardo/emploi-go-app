@@ -1,0 +1,157 @@
+name: Publication des images
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+# A group distinct from the one of the called checks, which takes the name of this workflow.
+concurrency:
+  group: images-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  origin:
+    name: Vérifier la branche du commit
+    if: ${{ contains(github.ref_name, '-rc.') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Récupérer le dépôt et ses branches
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Refuser un commit absent de main et des branches de maintenance
+        run: |
+          if ! git branch --remotes --contains "$GITHUB_SHA" --format '%(refname:short)' | grep -qE '^origin/(main|maintenance/.+)$'; then
+            echo "::error::$GITHUB_SHA is on neither main nor a maintenance branch."
+            exit 1
+          fi
+
+  checks:
+    name: Vérifications
+    needs: origin
+    uses: ./.github/workflows/checks.yml
+
+  publish:
+    name: Publier l'image ${{ matrix.image }}
+    needs: checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: backend
+            context: backend
+          - image: frontend
+            context: .
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Nommer l'image
+        id: image
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/emploi-go-${{ matrix.image }}" >> "$GITHUB_OUTPUT"
+      - name: Préparer les tags et labels
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ${{ steps.image.outputs.name }}
+          flavor: latest=false
+          tags: |
+            type=ref,event=tag
+            type=sha,format=long
+      - name: Préparer Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with:
+          version: v0.38.1
+          driver-opts: image=moby/buildkit:v0.34.1@sha256:99368f3e46177c6405b9740e4461d91cee004128daeecca78d4ceac50ec1da5c
+      - name: Se connecter à GHCR
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Refuser un commit déjà publié
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}
+        run: |
+          if docker buildx imagetools inspect "$IMAGE:sha-$GITHUB_SHA" > /dev/null 2>&1; then
+            echo "::error::$IMAGE:sha-$GITHUB_SHA already exists: a new candidate needs a new commit."
+            exit 1
+          fi
+      - name: Construire et publier l'image
+        id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.image }}/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # The cache is also written by the checks, which run the code of the dependencies.
+          no-cache: true
+      - name: Afficher le digest
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          {
+            echo "### Image ${{ matrix.image }}"
+            echo
+            echo "- Image : \`$IMAGE@$DIGEST\`"
+            echo "- Tags :"
+            while IFS= read -r tag; do echo "  - \`$tag\`"; done <<< "$TAGS"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  promote:
+    name: Promouvoir l'image ${{ matrix.image }}
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [backend, frontend]
+    steps:
+      - name: Se connecter à GHCR
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Ajouter le tag de version à l'image du commit
+        shell: bash
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/emploi-go-${{ matrix.image }}"
+          if ! digest=$(docker buildx imagetools inspect "$image:sha-$GITHUB_SHA" --format '{{json .Manifest}}' | jq -r .digest); then
+            echo "::error::No candidate image $image:sha-$GITHUB_SHA: tag a vX.Y.Z-rc.N on this commit first."
+            exit 1
+          fi
+          docker buildx imagetools create --tag "$image:$GITHUB_REF_NAME" "$image@$digest"
+          promoted=$(docker buildx imagetools inspect "$image:$GITHUB_REF_NAME" --format '{{json .Manifest}}' | jq -r .digest)
+          if [ "$promoted" != "$digest" ]; then
+            echo "::error::$image:$GITHUB_REF_NAME points to $promoted instead of $digest."
+            exit 1
+          fi
+          {
+            echo "### Image ${{ matrix.image }}"
+            echo
+            echo "- Image : \`$image@$digest\`"
+            echo "- Tag ajouté : \`$GITHUB_REF_NAME\`, sans reconstruction"
+          } >> "$GITHUB_STEP_SUMMARY"

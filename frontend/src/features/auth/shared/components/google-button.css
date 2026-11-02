@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'Emploi Go Google Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/google-sans-medium.woff2') format('woff2');
+}
+
+.google-auth-button {
+  font-family: 'Emploi Go Google Sans', Arial, sans-serif;
+}
